@@ -1,0 +1,8 @@
+# Ignore virtual environment and large binaries
+myenv/
+*.dll
+*.pyd
+*.lib
+*.pt
+*.zip
+*.exe

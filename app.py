@@ -26,52 +26,67 @@ def index():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    if 'image' not in request.files:
-        return render_template('index.html', products=product_list, error="No image uploaded.")
+    try:
+        if 'image' not in request.files:
+            return render_template('index.html', products=product_list, error="No image uploaded.")
 
-    file = request.files['image']
-    filename = f"{uuid.uuid4().hex}_{file.filename}"
-    filepath = os.path.join(UPLOAD_FOLDER, filename)
-    file.save(filepath)
+        file = request.files['image']
+        if file.filename == '':
+            return render_template('index.html', products=product_list, error="No image selected.")
 
-    # Load and predict
-    image = Image.open(filepath).convert("RGB")
-    results = model(image)
-    boxes = results[0].boxes
-    output_image = image.copy()
-    draw = ImageDraw.Draw(output_image)
+        # Save uploaded file
+        filename = f"{uuid.uuid4().hex}_{file.filename}"
+        filepath = os.path.join(UPLOAD_FOLDER, filename)
+        file.save(filepath)
 
-    class_names = model.names
-    detections = []
+        # Load and predict
+        image = Image.open(filepath).convert("RGB")
+        print("⚙️ Running model prediction...")
+        results = model(image)
+        print("✅ Model prediction done.")
 
-    if len(boxes) == 0:
-        message = "No objects detected."
-    else:
-        message = "Detected objects:"
-        for box in boxes:
-            x1, y1, x2, y2 = box.xyxy[0].cpu().numpy()
-            cls_id = int(box.cls[0])
-            conf = float(box.conf[0])
-            label = f"{class_names[cls_id]} ({conf:.2f})"
-            draw.rectangle([x1, y1, x2, y2], outline="red", width=3)
-            draw.text((x1, y1), label, fill="black")
-            detections.append(label)
+        boxes = results[0].boxes
+        output_image = image.copy()
+        draw = ImageDraw.Draw(output_image)
 
-    # Save result image
-    result_filename = f"result_{filename}"
-    result_path = os.path.join(RESULT_FOLDER, result_filename)
-    output_image.save(result_path)
+        # Class names from model or fallback
+        class_names = getattr(model, 'names', config.get('names', {}))
+        detections = []
 
-    # Return paths for display in HTML
-    return render_template('index.html',
-                           products=product_list,
-                           original_image='/' + filepath,
-                           result_image='/' + result_path,
-                           detections=detections,
-                           message=message)
+        if len(boxes) == 0:
+            message = "No objects detected."
+        else:
+            message = "Detected objects:"
+            for box in boxes:
+                x1, y1, x2, y2 = box.xyxy[0].cpu().numpy()
+                cls_id = int(box.cls[0])
+                conf = float(box.conf[0])
+                label = f"{class_names[cls_id]} ({conf:.2f})"
+                draw.rectangle([x1, y1, x2, y2], outline="red", width=3)
+                draw.text((x1, y1), label, fill="black")
+                detections.append(label)
+
+        # Save result image
+        result_filename = f"result_{filename}"
+        result_path = os.path.join(RESULT_FOLDER, result_filename)
+        output_image.save(result_path)
+
+        return render_template('index.html',
+                               products=product_list,
+                               original_image='/' + filepath,
+                               result_image='/' + result_path,
+                               detections=detections,
+                               message=message)
+
+    except Exception as e:
+        print(f"❌ ERROR during prediction: {e}")
+        return render_template('index.html',
+                               products=product_list,
+                               error=f"Something went wrong during prediction: {e}")
 
 
                            
 # ────────────────────── Main ──────────────────────
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, use_reloader=False)
+
