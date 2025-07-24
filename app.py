@@ -6,20 +6,22 @@ import yaml
 from ultralytics import YOLO
 
 app = Flask(__name__)
+
+# ─── Directories ─────────────────────────────
 UPLOAD_FOLDER = 'static/uploads'
 RESULT_FOLDER = 'static/results'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(RESULT_FOLDER, exist_ok=True)
 
-# Load YOLO model
+# ─── Load YOLOv8 Model ───────────────────────
 model = YOLO('my_yolo_model.pt')
 
-# Load product names
+# ─── Load Product Names ──────────────────────
 with open("yoo_config.yaml", "r") as f:
     config = yaml.safe_load(f)
-product_list = list(dict.fromkeys(config['names']))
-# remove duplicates
+product_list = list(dict.fromkeys(config['names']))  # Remove duplicates
 
+# ─── Routes ───────────────────────────────────
 @app.route('/')
 def index():
     return render_template('index.html', products=product_list)
@@ -84,9 +86,11 @@ def predict():
                                products=product_list,
                                error=f"Something went wrong during prediction: {e}")
 
+# if __name__ == '__main__':
+#     app.run(debug=True, use_reloader=False)
 
-                           
-# ────────────────────── Main ──────────────────────
-if __name__ == '__main__':
-    app.run(debug=True, use_reloader=False)
 
+# Do not include app.run() to ensure Render uses gunicorn properly
+# If needed locally, use this block only when testing locally
+# if __name__ == '__main__':
+#     app.run(debug=True, use_reloader=False)
