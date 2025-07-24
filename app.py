@@ -1,3 +1,7 @@
+
+# Do not include app.run() to ensure Render uses gunicorn properly
+# If needed locally, use this block only when testing locally
+# if __name__ == '__main__':
 from flask import Flask, request, render_template
 from PIL import Image, ImageDraw
 import os
@@ -30,8 +34,11 @@ def index():
 def ping():
     return "pong", 200
 
-@app.route('/predict', methods=['POST'])
+@app.route('/predict', methods=['GET', 'POST'])
 def predict():
+    if request.method == 'GET':
+        return "This endpoint only supports POST requests to upload images.", 405
+
     try:
         if 'image' not in request.files:
             return render_template('index.html', products=product_list, error="No image uploaded.")
@@ -89,9 +96,4 @@ def predict():
         return render_template('index.html',
                                products=product_list,
                                error=f"Something went wrong during prediction: {e}")
-
-
-# Do not include app.run() to ensure Render uses gunicorn properly
-# If needed locally, use this block only when testing locally
-# if __name__ == '__main__':
 #     app.run(debug=True, use_reloader=False)
