@@ -22,9 +22,13 @@ with open("yoo_config.yaml", "r") as f:
 product_list = list(dict.fromkeys(config['names']))  # Remove duplicates
 
 # ─── Routes ───────────────────────────────────
-@app.route('/')
+@app.route('/', methods=['GET'])
 def index():
     return render_template('index.html', products=product_list)
+
+@app.route('/ping', methods=['GET'])
+def ping():
+    return "pong", 200
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -85,9 +89,6 @@ def predict():
         return render_template('index.html',
                                products=product_list,
                                error=f"Something went wrong during prediction: {e}")
-
-# if __name__ == '__main__':
-#     app.run(debug=True, use_reloader=False)
 
 
 # Do not include app.run() to ensure Render uses gunicorn properly
