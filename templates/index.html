@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>YOLOv8 Detection</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f4f6f9;
+        }
+
+        .main-layout {
+            display: flex;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: #ffffff;
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            color: #1a73e8;
+            margin-bottom: 15px;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .product-card {
+            text-align: center;
+            background: #f9fafc;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+        }
+
+        .circle-badge {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #1a73e8;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px auto;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-card span {
+            font-size: 14px;
+            color: #333;
+            display: block;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 40px;
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: #1a73e8;
+        }
+
+        .upload-box,
+        .result-section {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 40px;
+        }
+
+        input[type="file"],
+        input[type="submit"] {
+            padding: 12px;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+
+        input[type="submit"] {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #1669c1;
+        }
+
+        .detections {
+            background: #eef3fc;
+            border-left: 5px solid #1a73e8;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+
+        ul.detection-list {
+            padding-left: 20px;
+        }
+
+        .images {
+            display: flex;
+            gap: 40px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .images img {
+            max-height: 280px;
+            border-radius: 10px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .no-result {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-layout">
+
+        <!-- ─────── Sidebar ─────── -->
+        <div class="sidebar">
+            <h2>Supported Products</h2>
+            <div class="product-grid">
+                {% for item in products|unique %}
+                <div class="product-card">
+                    <div class="circle-badge">
+                        {{ item.split()[0][0] }}{{ item.split()[1][0] if item.split()|length > 1 else '' }}
+                    </div>
+                    <span>{{ item }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- ─────── Main Content ─────── -->
+        <div class="content">
+            <h1>Upload an Image for Object Detection</h1>
+
+            <div class="upload-box">
+                <form action="/predict" method="post" enctype="multipart/form-data">
+                    <input type="file" name="image" required><br><br>
+                    <input type="submit" value="Upload and Predict">
+                </form>
+            </div>
+
+            {% if result_image %}
+            <div class="result-section">
+                <h2>Results</h2>
+
+                {% if detections|length == 0 %}
+                <p class="no-result">No objects detected.</p>
+                {% else %}
+                <p class="detections"><strong>Detected objects:</strong></p>
+                <ul class="detection-list">
+                    {% for item in detections %}
+                    <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                <div class="images">
+                    <div>
+                        <h3>Original Image</h3>
+                        <img src="{{ original_image }}" alt="Uploaded Image">
+                    </div>
+                    <div>
+                        <h3>Detected Image</h3>
+                        <img src="{{ result_image }}" alt="Detected Image">
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+
+</html>

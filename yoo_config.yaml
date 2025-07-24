@@ -1,0 +1,49 @@
+names:
+- Oppo Enco Buds2
+- Nabati Wafer
+- Minimalist Sunscreen
+- Maggie
+- Johnsons Baby Cream
+- Himalaya Skin Cream
+- Dettol
+- Denver Deodorant
+- Dabur Honey
+- Dabur Chyawanprash
+- Citizen Notebook
+- biotique sunscreen
+- Apsara Pencil
+- Apis Ginger Garlic Paste
+- Amul Butter
+nc: 15
+train:
+- /kaggle/input/grid-flip/sss/Oppo Enco Buds2/train/images
+- /kaggle/input/grid-flip/sss/Nabati Wafer/train/images
+- /kaggle/input/grid-flip/sss/Minimalist Sunscreen/train/images
+- /kaggle/input/grid-flip/sss/Maggie/train/images
+- /kaggle/input/grid-flip/sss/Johnsons Baby Cream/train/images
+- /kaggle/input/grid-flip/sss/Himalaya Skin Cream/train/images
+- /kaggle/input/grid-flip/sss/Dettol/train/images
+- /kaggle/input/grid-flip/sss/Denver Deodorant/train/images
+- /kaggle/input/grid-flip/sss/Dabur Honey/train/images
+- /kaggle/input/grid-flip/sss/Dabur Chyawanprash/train/images
+- /kaggle/input/grid-flip/sss/Citizen Notebook/train/images
+- /kaggle/input/grid-flip/sss/biotique sunscreen/train/images
+- /kaggle/input/grid-flip/sss/Apsara Pencil/train/images
+- /kaggle/input/grid-flip/sss/Apis Ginger Garlic Paste/train/images
+- /kaggle/input/grid-flip/sss/Amul Butter/train/images
+val:
+- /kaggle/input/grid-flip/sss/Oppo Enco Buds2/valid/images
+- /kaggle/input/grid-flip/sss/Nabati Wafer/valid/images
+- /kaggle/input/grid-flip/sss/Minimalist Sunscreen/valid/images
+- /kaggle/input/grid-flip/sss/Maggie/valid/images
+- /kaggle/input/grid-flip/sss/Johnsons Baby Cream/valid/images
+- /kaggle/input/grid-flip/sss/Himalaya Skin Cream/valid/images
+- /kaggle/input/grid-flip/sss/Dettol/valid/images
+- /kaggle/input/grid-flip/sss/Denver Deodorant/valid/images
+- /kaggle/input/grid-flip/sss/Dabur Honey/valid/images
+- /kaggle/input/grid-flip/sss/Dabur Chyawanprash/valid/images
+- /kaggle/input/grid-flip/sss/Citizen Notebook/valid/images
+- /kaggle/input/grid-flip/sss/biotique sunscreen/valid/images
+- /kaggle/input/grid-flip/sss/Apsara Pencil/valid/images
+- /kaggle/input/grid-flip/sss/Apis Ginger Garlic Paste/valid/images
+- /kaggle/input/grid-flip/sss/Amul Butter/valid/images
